@@ -12,6 +12,7 @@ class GroupUserSerializer(ModelSerializer):
         rep = super(GroupUserSerializer, self).to_representation(instance)
         rep['group_name'] = instance.group.name
         rep['user'] = instance.user.username
+        rep['last'] = ChatSerializer(instance.group.chat.all().order_by('-timestamp').first()).data
         return rep
 
 

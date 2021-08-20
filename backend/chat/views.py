@@ -10,14 +10,11 @@ from .serializers import GroupUserSerializer, ChatSerializer
 
 class GroupUserCreateView(APIView):
     def post(self, request):
+        display_name = request.data['display_name']
+        user = get_object_or_404(User, username=request.data['user'])
         group, _ = Group.objects.get_or_create(name=request.data['group'])
-        request.data['group'] = group.uuid
-        request.data['user'] = get_object_or_404(User, username=request.data['user']).id
-        serializer = GroupUserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        group_user, _ = GroupUser.objects.get_or_create(group=group, user=user, display_name=display_name)
+        return Response('Created', status=status.HTTP_200_OK)
 
 
 class GroupUserListByGroupView(APIView):

@@ -17,6 +17,9 @@ class GroupUser(models.Model):
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ['display_name', 'group', 'user']
+
     def __str__(self):
         return f'{self.group}'
 
