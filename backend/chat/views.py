@@ -43,6 +43,6 @@ class ChatCreateView(APIView):
 
 class ChatListView(APIView):
     def get(self, request, group):
-        chats = Chat.objects.filter(group=group).order_by('-timestamp')
+        chats = Chat.objects.filter(group=group).order_by('timestamp')
         serializer = ChatSerializer(chats, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
