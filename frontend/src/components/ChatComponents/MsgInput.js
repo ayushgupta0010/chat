@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import ReconnectingWebSocket from "reconnecting-websocket";
 
-const MsgInput = ({ user, group, setMessages }) => {
+const MsgInput = ({ user, group, setMessages, setContactList }) => {
   const [message, setMessage] = useState("");
 
   const websocket = useRef(null);
@@ -26,10 +26,13 @@ const MsgInput = ({ user, group, setMessages }) => {
     websocket.current.onmessage = (message) => {
       const msg = JSON.parse(message.data);
       setMessages((original) => [...original, msg]);
+      setContactList((original) =>
+        original.map((x) => (x.group === group ? { ...x, last: msg } : x))
+      );
     };
 
     return () => websocket.current.close();
-  }, [group, setMessages]);
+  }, [group, setContactList, setMessages]);
 
   return (
     <div className='chat-footer pb-3 pb-lg-7 position-absolute bottom-0 start-0'>

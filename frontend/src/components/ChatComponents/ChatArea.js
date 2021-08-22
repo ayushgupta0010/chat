@@ -30,6 +30,7 @@ const ChatArea = ({ data }) => {
             user={data.user}
             group={data.selectedChat}
             setMessages={setMessages}
+            setContactList={data.setContactList}
           />
         </div>
       </div>

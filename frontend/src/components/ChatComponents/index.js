@@ -23,7 +23,9 @@ const Chat = (props) => {
     <div className='layout overflow-hidden'>
       <ContactList data={{ contactList, setSelectedChat, setTitle }} />
       {selectedChat && selectedChat !== "" && (
-        <MessageBox data={{ selectedChat, setSelectedChat, title, user }} />
+        <MessageBox
+          data={{ selectedChat, setSelectedChat, title, user, setContactList }}
+        />
       )}
     </div>
   );
