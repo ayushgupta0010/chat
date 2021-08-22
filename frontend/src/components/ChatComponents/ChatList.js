@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const getDate = (d) => {
@@ -12,6 +12,12 @@ const getDate = (d) => {
     second: "numeric",
     hour12: true,
   });
+};
+
+const AlwaysScrollToBottom = () => {
+  const elementRef = useRef();
+  useEffect(() => elementRef.current.scrollIntoView());
+  return <div ref={elementRef} />;
 };
 
 const ChatList = ({ chats, user }) => {
@@ -53,6 +59,7 @@ const ChatList = ({ chats, user }) => {
           <LoadChatList />
         </div>
       </div>
+      <AlwaysScrollToBottom />
     </div>
   );
 };
