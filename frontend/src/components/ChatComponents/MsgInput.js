@@ -14,7 +14,14 @@ const MsgInput = ({ user, group, setMessages, setContactList }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = { type: "chat_message", sender: user, group, message };
+    const data = {
+      type: "chat_message",
+      sender: user,
+      group,
+      message,
+      msg_type: "text",
+      files: "",
+    };
     websocket.current.send(JSON.stringify(data));
     setMessage("");
   };

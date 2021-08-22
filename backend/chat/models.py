@@ -3,10 +3,11 @@ import uuid
 from django.contrib.auth.models import User
 from django.db import models
 
-FILE_TYPES = [
+MSG_TYPES = [
     ('audio', 'audio'),
     ('document', 'document'),
     ('image', 'image'),
+    ('text', 'text'),
     ('video', 'video'),
 ]
 
@@ -33,7 +34,7 @@ class Contact(models.Model):
 
 class Chat(models.Model):
     message = models.TextField()
-    file_type = models.CharField(max_length=8, choices=FILE_TYPES, blank=True, null=True)
+    msg_type = models.CharField(max_length=8, choices=MSG_TYPES, default='text')
     files = models.JSONField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)

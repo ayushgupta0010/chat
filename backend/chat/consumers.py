@@ -9,8 +9,11 @@ from .serializers import ChatSerializer
 
 class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
-    def create_chat(self, sender, group, message):
-        data = {'sender': User.objects.get(username=sender).id, 'group': group, 'message': message}
+    def create_chat(self, sender, group, message, msg_type, files=None):
+        data = {
+            'sender': User.objects.get(username=sender).id, 'group': group,
+            'message': message, 'msg_type': msg_type, 'files': files
+        }
         serializer = ChatSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -29,16 +32,21 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         await self.channel_layer.group_send(self.room_group_name, {
             'type': 'chat_message',
+            'message': text_data_json['message'],
+            'msg_type': text_data_json['msg_type'],
+            'files': text_data_json['files'],
             'sender': text_data_json['sender'],
             'group': text_data_json['group'],
-            'message': text_data_json['message'],
         })
 
     async def chat_message(self, event):
-        sender, group, message = event['sender'], event['group'], event['message']
-        chat = await self.create_chat(sender, group, message)
+        message, msg_type, files = event['message'], event['msg_type'], event['files']
+        sender, group = event['sender'], event['group']
+        chat = await self.create_chat(sender, group, message, msg_type, files)
         await self.send(text_data=json.dumps({
             'sender': chat['sender'],
             'message': chat['message'],
+            'msg_type': chat['msg_type'],
+            'files': chat['files'],
             'timestamp': chat['timestamp']
         }))
