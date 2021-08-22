@@ -20,6 +20,16 @@ const AlwaysScrollToBottom = () => {
   return <div ref={elementRef} />;
 };
 
+const linkifyMessage = (text) => {
+  const urlRegex =
+    /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\\/%?=~_|!:,.;]*[-A-Z0-9+&@#\\/%=~_|])/gi;
+  return text.replace(
+    urlRegex,
+    (url) =>
+      `<a href="${url}" class="text-secondary" target="_blank">${url}</a>`
+  );
+};
+
 const ChatList = ({ chats, user }) => {
   const LoadChatList = () =>
     chats.map((msg, i) => {
@@ -38,7 +48,10 @@ const ChatList = ({ chats, user }) => {
             <div className='message-body'>
               <div className='message-content'>
                 <div className='message-text'>
-                  <p>{msg.message}</p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: linkifyMessage(msg.message),
+                    }}></div>
                 </div>
               </div>
               <div className='message-footer'>
