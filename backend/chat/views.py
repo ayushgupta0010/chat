@@ -10,10 +10,11 @@ from .serializers import ContactSerializer, ChatSerializer
 
 class ContactCreateView(APIView):
     def post(self, request):
-        display_name = request.data['display_name']
-        user = get_object_or_404(User, username=request.data['user'])
         group, _ = Group.objects.get_or_create(name=request.data['group'])
-        contact, _ = Contact.objects.get_or_create(group=group, user=user, display_name=display_name)
+        user1 = get_object_or_404(User, username=request.data['user1'])
+        user2 = get_object_or_404(User, username=request.data['user2'])
+        contact1, _ = Contact.objects.get_or_create(group=group, user=user1, display_name=user2.username)
+        contact2, _ = Contact.objects.get_or_create(group=group, user=user2, display_name=user1.username)
         return Response('Created', status=status.HTTP_200_OK)
 
 
