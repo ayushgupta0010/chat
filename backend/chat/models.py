@@ -12,7 +12,7 @@ class Group(models.Model):
         return f'{self.uuid}'
 
 
-class GroupUser(models.Model):
+class Contact(models.Model):
     display_name = models.CharField(max_length=50)
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)

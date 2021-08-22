@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Chat, Group, GroupUser
+from .models import Chat, Group, Contact
 
 
 class ChatAdmin(admin.ModelAdmin):
@@ -17,4 +17,4 @@ class GroupUserAdmin(admin.ModelAdmin):
 
 admin.site.register(Chat, ChatAdmin)
 admin.site.register(Group, GroupAdmin)
-admin.site.register(GroupUser, GroupUserAdmin)
+admin.site.register(Contact, GroupUserAdmin)

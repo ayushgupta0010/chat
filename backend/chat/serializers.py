@@ -1,15 +1,15 @@
 from rest_framework.serializers import ModelSerializer
 
-from .models import Chat, GroupUser
+from .models import Chat, Contact
 
 
-class GroupUserSerializer(ModelSerializer):
+class ContactSerializer(ModelSerializer):
     class Meta:
-        model = GroupUser
+        model = Contact
         fields = '__all__'
 
     def to_representation(self, instance):
-        rep = super(GroupUserSerializer, self).to_representation(instance)
+        rep = super(ContactSerializer, self).to_representation(instance)
         rep['group_name'] = instance.group.name
         rep['user'] = instance.user.username
         rep['last'] = ChatSerializer(instance.group.chat.all().order_by('-timestamp').first()).data
