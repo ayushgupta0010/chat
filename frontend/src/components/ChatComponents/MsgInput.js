@@ -1,17 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import ReconnectingWebSocket from "reconnecting-websocket";
 
-const handleFile = (e) => {
-  const elem = document.getElementsByClassName("dz-hidden-input")[0];
-  elem.click();
-};
-
-const MsgInput = ({ user, group }) => {
+const MsgInput = ({ user, group, setMessages }) => {
   const [message, setMessage] = useState("");
+
+  const websocket = useRef(null);
+
+  const handleFile = (e) => {
+    const elem = document.getElementsByClassName("dz-hidden-input")[0];
+    elem.click();
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = { type: "chat_message", sender: user, group, message };
+    websocket.current.send(JSON.stringify(data));
+    setMessage("");
+  };
+
+  useEffect(() => {
+    const path = `ws://localhost:8000/ws/chat/${group}/`;
+    websocket.current = new ReconnectingWebSocket(path);
+
+    websocket.current.onmessage = (message) => {
+      const msg = JSON.parse(message.data);
+      setMessages((original) => [...original, msg]);
+    };
+
+    return () => websocket.current.close();
+  }, [group, setMessages]);
 
   return (
     <div className='chat-footer pb-3 pb-lg-7 position-absolute bottom-0 start-0'>
-      <form className='chat-form rounded-pill bg-dark'>
+      <form className='chat-form rounded-pill bg-dark' onSubmit={handleSubmit}>
         <div className='row align-items-center gx-0'>
           <div className='col-auto'>
             <Link

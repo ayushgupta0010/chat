@@ -26,7 +26,11 @@ const ChatArea = ({ data }) => {
             setSelectedChat={data.setSelectedChat}
           />
           <ChatList chats={messages} user={data.user} />
-          <MsgInput user={data.user} group={data.selectedChat} />
+          <MsgInput
+            user={data.user}
+            group={data.selectedChat}
+            setMessages={setMessages}
+          />
         </div>
       </div>
     </main>
