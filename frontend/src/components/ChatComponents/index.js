@@ -21,7 +21,9 @@ const Chat = (props) => {
 
   return (
     <div className='layout overflow-hidden'>
-      <Contact data={{ contactList, setSelectedChat, setTitle }} />
+      <Contact
+        data={{ contactList, user, setSelectedChat, setTitle, setContactList }}
+      />
       {selectedChat && selectedChat !== "" && (
         <ChatArea
           data={{ selectedChat, setSelectedChat, title, user, setContactList }}

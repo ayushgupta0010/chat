@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import ReconnectingWebSocket from "reconnecting-websocket";
 
 const Contacts = ({ data }) => {
   const [search, setSearch] = useState("");
+
+  const websocket = useRef(null);
 
   const getTimestamp = (d) =>
     new Date(d).toLocaleString("en-US", {
@@ -76,19 +79,31 @@ const Contacts = ({ data }) => {
       );
     });
 
+  useEffect(() => {
+    const path = `ws://localhost:8000/ws/contact/${data.user}/`;
+    websocket.current = new ReconnectingWebSocket(path);
+
+    websocket.current.onmessage = (e) => {
+      const contact = JSON.parse(e.data);
+      data.setContactList((original) => [...original, contact]);
+    };
+
+    return () => websocket.current.close();
+  });
+
   return (
     <aside className='sidebar bg-light'>
       <div className='fade h-100 show active' role='tabpanel'>
         <div className='d-flex flex-column h-100 position-relative'>
           <div className='hide-scrollbar'>
             <div className='container py-8'>
-              <div class='mb-8'>
-                <h2 class='fw-bold ms-3'>Chats</h2>
+              <div className='mb-8'>
+                <h2 className='fw-bold ms-3'>Chats</h2>
               </div>
-              <div class='mb-6'>
-                <div class='input-group'>
-                  <div class='input-group-text'>
-                    <div class='icon icon-lg'>
+              <div className='mb-6'>
+                <div className='input-group'>
+                  <div className='input-group-text'>
+                    <div className='icon icon-lg'>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
                         width='24'
@@ -96,10 +111,10 @@ const Contacts = ({ data }) => {
                         viewBox='0 0 24 24'
                         fill='none'
                         stroke='currentColor'
-                        stroke-width='2'
-                        stroke-linecap='round'
-                        stroke-linejoin='round'
-                        class='feather feather-search'>
+                        strokeWidth='2'
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        className='feather feather-search'>
                         <circle cx='11' cy='11' r='8'></circle>
                         <line x1='21' y1='21' x2='16.65' y2='16.65'></line>
                       </svg>
@@ -107,7 +122,7 @@ const Contacts = ({ data }) => {
                   </div>
                   <input
                     type='text'
-                    class='form-control form-control-lg ps-0'
+                    className='form-control form-control-lg ps-0'
                     placeholder='Search users'
                     aria-label='Search for users...'
                     value={search}
