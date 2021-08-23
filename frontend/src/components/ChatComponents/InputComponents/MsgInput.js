@@ -1,29 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import ReconnectingWebSocket from "reconnecting-websocket";
+import FileModal from "./FileModal";
 
 const MsgInput = ({ user, group, setMessages, setContactList }) => {
   const [message, setMessage] = useState("");
 
   const websocket = useRef(null);
 
-  const handleFile = (e) => {
-    const elem = document.getElementsByClassName("dz-hidden-input")[0];
-    elem.click();
+  const handleModal = (e) => {
+    const elem = document.getElementsByClassName("modal-backdrop");
+    for (var i = 0; i < elem.length; i++)
+      elem[i].classList.remove("modal-backdrop");
+  };
+
+  const handleFileInput = (e) => {
+    var data = {
+      type: "chat_message",
+      sender: user,
+      group,
+      message: "",
+      msg_type: e.target.name,
+    };
+    for (var i = 0; i < e.target.files.length; i++) {
+      data.files = { ...data.files, [e.target.files[i].name]: "test" };
+    }
+    websocket.current.send(JSON.stringify(data));
+    document.getElementById(`${e.target.name}-input`).value = "";
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data = {
-      type: "chat_message",
-      sender: user,
-      group,
-      message,
-      msg_type: "text",
-      files: "",
-    };
-    websocket.current.send(JSON.stringify(data));
-    setMessage("");
+    if (message !== "") {
+      const data = {
+        type: "chat_message",
+        sender: user,
+        group,
+        message,
+        msg_type: "text",
+        files: "",
+      };
+      websocket.current.send(JSON.stringify(data));
+      setMessage("");
+    }
   };
 
   useEffect(() => {
@@ -46,10 +64,13 @@ const MsgInput = ({ user, group, setMessages, setContactList }) => {
       <form className='chat-form rounded-pill bg-dark' onSubmit={handleSubmit}>
         <div className='row align-items-center gx-0'>
           <div className='col-auto'>
-            <Link
+            <button
               to='#'
+              type='button'
+              data-bs-toggle='modal'
+              data-bs-target='#modal-profile'
               className='btn btn-icon btn-link text-body rounded-circle'
-              onClick={handleFile}>
+              onClick={handleModal}>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='24'
@@ -63,7 +84,7 @@ const MsgInput = ({ user, group, setMessages, setContactList }) => {
                 className='feather feather-paperclip'>
                 <path d='M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48' />
               </svg>
-            </Link>
+            </button>
           </div>
           <div className='col'>
             <div className='input-group'>
@@ -85,7 +106,9 @@ const MsgInput = ({ user, group, setMessages, setContactList }) => {
           </div>
 
           <div className='col-auto'>
-            <button className='btn btn-icon btn-primary rounded-circle ms-5'>
+            <button
+              className='btn btn-icon btn-primary rounded-circle ms-5'
+              type='submit'>
               <svg
                 xmlns='http://www.w3.org/2000/svg'
                 width='24'
@@ -104,6 +127,43 @@ const MsgInput = ({ user, group, setMessages, setContactList }) => {
           </div>
         </div>
       </form>
+      <FileModal />
+      <input
+        type='file'
+        accept='audio/*'
+        id='audio-input'
+        name='audio'
+        multiple
+        hidden
+        onChange={handleFileInput}
+      />
+      <input
+        type='file'
+        accept='all'
+        id='document-input'
+        name='document'
+        multiple
+        hidden
+        onChange={handleFileInput}
+      />
+      <input
+        type='file'
+        accept='image/*'
+        id='image-input'
+        name='image'
+        multiple
+        hidden
+        onChange={handleFileInput}
+      />
+      <input
+        type='file'
+        accept='video/*'
+        id='video-input'
+        name='video'
+        multiple
+        hidden
+        onChange={handleFileInput}
+      />
     </div>
   );
 };

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { CHAT } from "../../utils/urls";
+import { CHAT } from "../../../utils/urls";
 import axios from "axios";
 import Title from "./Title";
-import ChatList from "./ChatList";
-import MsgInput from "./MsgInput";
+import Chats from "./Chats";
+import MsgInput from "../InputComponents/MsgInput";
 
 const ChatArea = ({ data }) => {
   const [messages, setMessages] = useState([]);
@@ -25,7 +25,7 @@ const ChatArea = ({ data }) => {
             title={data.title}
             setSelectedChat={data.setSelectedChat}
           />
-          <ChatList chats={messages} user={data.user} />
+          <Chats chats={messages} user={data.user} />
           <MsgInput
             user={data.user}
             group={data.selectedChat}

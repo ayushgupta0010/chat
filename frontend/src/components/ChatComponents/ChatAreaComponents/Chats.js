@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import Audio from "./Audio";
-import Document from "./Document";
-import Image from "./Image";
-import Video from "./Video";
+import Audio from "../FileComponents/Audio";
+import Document from "../FileComponents/Document";
+import Image from "../FileComponents/Image";
+import Video from "../FileComponents/Video";
 
 const getTimestamp = (d) =>
   new Date(d).toLocaleString("en-US", {
@@ -32,8 +32,8 @@ const linkifyMessage = (text) => {
   );
 };
 
-const ChatList = ({ chats, user }) => {
-  const LoadChatList = () =>
+const Chats = ({ chats, user }) => {
+  const LoadChats = () =>
     chats.map((msg, i) => {
       const classList = msg.sender === user ? "message message-out" : "message";
       return (
@@ -78,7 +78,7 @@ const ChatList = ({ chats, user }) => {
     <div className='chat-body hide-scrollbar flex-1 h-100'>
       <div className='chat-body-inner' style={{ paddingBottom: "87px" }}>
         <div className='py-6 py-lg-12'>
-          <LoadChatList />
+          <LoadChats />
         </div>
       </div>
       <AlwaysScrollToBottom />
@@ -86,4 +86,4 @@ const ChatList = ({ chats, user }) => {
   );
 };
 
-export default ChatList;
+export default Chats;
