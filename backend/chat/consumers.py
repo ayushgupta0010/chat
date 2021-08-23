@@ -9,7 +9,7 @@ from .serializers import ChatSerializer
 
 class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
-    def create_chat(self, sender, group, message, msg_type, files=None):
+    def create_chat(self, sender, group, message, msg_type='text', files=None):
         data = {
             'sender': User.objects.get(username=sender).id, 'group': group,
             'message': message, 'msg_type': msg_type, 'files': files

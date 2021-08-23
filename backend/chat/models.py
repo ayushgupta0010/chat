@@ -33,7 +33,7 @@ class Contact(models.Model):
 
 
 class Chat(models.Model):
-    message = models.TextField()
+    message = models.TextField(blank=True)
     msg_type = models.CharField(max_length=8, choices=MSG_TYPES, default='text')
     files = models.JSONField(blank=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True)
