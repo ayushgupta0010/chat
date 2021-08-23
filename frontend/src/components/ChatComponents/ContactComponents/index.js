@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const Contacts = ({ data }) => {
+  const [search, setSearch] = useState("");
+
   const getTimestamp = (d) =>
     new Date(d).toLocaleString("en-US", {
       month: "long",
@@ -13,8 +15,13 @@ const Contacts = ({ data }) => {
       hour12: true,
     });
 
+  const getFilteredUsers = (userList) =>
+    userList.filter((user) =>
+      Object.values(user).some((s) => ("" + s).toLowerCase().includes(search))
+    );
+
   const LoadContacts = () =>
-    data.contactList.map((contact, i) => {
+    getFilteredUsers(data.contactList).map((contact, i) => {
       var message;
       if (contact.last.msg_type === "text") message = contact.last.message;
       else if (contact.last.msg_type === "audio") message = "<audio>";
@@ -75,6 +82,39 @@ const Contacts = ({ data }) => {
         <div className='d-flex flex-column h-100 position-relative'>
           <div className='hide-scrollbar'>
             <div className='container py-8'>
+              <div class='mb-8'>
+                <h2 class='fw-bold ms-3'>Chats</h2>
+              </div>
+              <div class='mb-6'>
+                <div class='input-group'>
+                  <div class='input-group-text'>
+                    <div class='icon icon-lg'>
+                      <svg
+                        xmlns='http://www.w3.org/2000/svg'
+                        width='24'
+                        height='24'
+                        viewBox='0 0 24 24'
+                        fill='none'
+                        stroke='currentColor'
+                        stroke-width='2'
+                        stroke-linecap='round'
+                        stroke-linejoin='round'
+                        class='feather feather-search'>
+                        <circle cx='11' cy='11' r='8'></circle>
+                        <line x1='21' y1='21' x2='16.65' y2='16.65'></line>
+                      </svg>
+                    </div>
+                  </div>
+                  <input
+                    type='text'
+                    class='form-control form-control-lg ps-0'
+                    placeholder='Search users'
+                    aria-label='Search for users...'
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </div>
               <div className='card-list'>
                 <LoadContacts />
               </div>

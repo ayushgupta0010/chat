@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { GROUP_USER } from "../../utils/urls";
 import axios from "axios";
-import ContactList from "./ContactComponents";
+import Contact from "./ContactComponents";
 import ChatArea from "./ChatAreaComponents";
 
 const Chat = (props) => {
@@ -21,7 +21,7 @@ const Chat = (props) => {
 
   return (
     <div className='layout overflow-hidden'>
-      <ContactList data={{ contactList, setSelectedChat, setTitle }} />
+      <Contact data={{ contactList, setSelectedChat, setTitle }} />
       {selectedChat && selectedChat !== "" && (
         <ChatArea
           data={{ selectedChat, setSelectedChat, title, user, setContactList }}
