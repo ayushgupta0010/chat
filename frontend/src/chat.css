@@ -22221,7 +22221,7 @@ html {
 .sidebar {
     width: 100%;
     height: -webkit-fill-available;
-    height: calc(100vh - 58px);
+    height: calc(100vh - 0px);
 }
 
 .chat-footer {
