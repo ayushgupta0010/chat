@@ -1,3 +1,5 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -15,6 +17,13 @@ class ContactCreateView(APIView):
         user2 = get_object_or_404(User, username=request.data['user2'])
         contact1, _ = Contact.objects.get_or_create(group=group, user=user1, display_name=user2.username)
         contact2, _ = Contact.objects.get_or_create(group=group, user=user2, display_name=user1.username)
+        channel_layer = get_channel_layer()
+        serialized_data = ContactSerializer(contact2).data
+        serialized_data['group'] = str(serialized_data['group'])
+        async_to_sync(channel_layer.group_send)(f'contact_{contact2.user}', {
+            'type': 'new_contact',
+            **serialized_data
+        })
         return Response('Created', status=status.HTTP_200_OK)
 
 
