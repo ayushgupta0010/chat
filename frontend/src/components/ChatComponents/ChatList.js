@@ -1,9 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import Audio from "./Audio";
+import Document from "./Document";
+import Image from "./Image";
+import Video from "./Video";
 
-const getDate = (d) => {
-  const date = new Date(d);
-  return date.toLocaleString("en-US", {
+const getTimestamp = (d) =>
+  new Date(d).toLocaleString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
@@ -12,7 +15,6 @@ const getDate = (d) => {
     second: "numeric",
     hour12: true,
   });
-};
 
 const AlwaysScrollToBottom = () => {
   const elementRef = useRef();
@@ -47,16 +49,23 @@ const ChatList = ({ chats, user }) => {
           <div className='message-inner'>
             <div className='message-body'>
               <div className='message-content'>
-                <div className='message-text'>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: linkifyMessage(msg.message),
-                    }}></div>
-                </div>
+                {msg.msg_type === "text" && (
+                  <div className='message-text'>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: linkifyMessage(msg.message),
+                      }}
+                    />
+                  </div>
+                )}
+                {msg.msg_type === "audio" && <Audio files={msg.files} />}
+                {msg.msg_type === "document" && <Document files={msg.files} />}
+                {msg.msg_type === "image" && <Image files={msg.files} />}
+                {msg.msg_type === "video" && <Video files={msg.files} />}
               </div>
               <div className='message-footer'>
                 <span className='extra-small text-muted'>
-                  {getDate(msg.timestamp)}
+                  {getTimestamp(msg.timestamp)}
                 </span>
               </div>
             </div>

@@ -1,12 +1,12 @@
 import React from "react";
 
-const ImgFile = ({ files }) => {
+const Image = ({ files }) => {
   const LoadImg = () =>
-    files.map((x, i) => (
+    Object.keys(files).map((x, i) => (
       <div className='col' key={i}>
         <img
           className='img-fluid rounded'
-          src={x}
+          src={files[x]}
           data-action='zoom'
           alt='user'
         />
@@ -22,4 +22,4 @@ const ImgFile = ({ files }) => {
   );
 };
 
-export default ImgFile;
+export default Image;
